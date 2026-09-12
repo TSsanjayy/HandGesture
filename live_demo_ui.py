@@ -257,3 +257,8 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+print()
+print("Live demo closed.")
+print(f"Average Pipeline FPS: {fps:.2f}")
+print(f"Average Classifier Time: {avg_classifier_ms:.4f} ms")
