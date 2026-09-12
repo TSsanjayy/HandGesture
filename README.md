@@ -1,13 +1,10 @@
-Yep 👍 Here is the **complete README.md in one block**. Just copy everything below and paste it into your `README.md`.
-
-````markdown
 # ✋ Real-Time Hand Gesture Recognition
 
 ### MediaPipe • Computer Vision • Machine Learning • Real-Time Interaction
 
 A real-time hand gesture recognition system built using **Python, OpenCV, MediaPipe Hands, and Random Forest machine learning**.
 
-The system recognizes **5 hand gestures** from MediaPipe's 21 hand landmarks and compares two feature representations to study **accuracy, generalization, and inference speed**.
+The system recognizes **five hand gestures** using MediaPipe's 21 hand landmarks and evaluates two different feature representations for **accuracy, cross-session generalization, and inference speed**.
 
 ---
 
@@ -16,279 +13,176 @@ The system recognizes **5 hand gestures** from MediaPipe's 21 hand landmarks and
 | Feature | Result |
 |---|---|
 | 🎯 Gesture Classes | **5** |
-| 🖐️ MediaPipe Landmarks | **21 per hand** |
+| 🖐️ Hand Landmarks | **21** |
 | 📊 Raw Features | **63** |
 | 📐 Engineered Features | **20** |
 | 🧠 Classifier | **Random Forest** |
 | 🏆 Best Separate-Session Accuracy | **94.84%** |
-| ⚡ Classifier Inference | **19.57 ms** |
+| ⚡ Best Classifier Inference | **19.57 ms** |
 | 🎥 Real-Time Webcam Demo | **Yes** |
 
 ### 🏆 Key Result
 
-The engineered geometric feature model achieved:
+The engineered geometric feature representation achieved **94.84% accuracy on a completely unseen recording session**.
 
-**94.84% accuracy on a completely unseen recording session.**
-
-Compared with raw landmark features, engineered features improved separate-session accuracy by:
-
-**+8.57 percentage points**
-
-This demonstrates stronger generalization across different recording sessions.
+Compared with raw landmark features, this improved separate-session accuracy by **8.57 percentage points**.
 
 ---
 
-# 👋 Gestures Recognized
+## 👋 Gestures Recognized
 
-The system recognizes five gestures:
-
-- ✊ **Fist**
-- 🖐️ **Open Palm**
-- ✌️ **Peace**
-- 👍 **Thumbs Up**
-- ☝️ **Pointing**
+✊ **Fist**  
+🖐️ **Open Palm**  
+✌️ **Peace**  
+👍 **Thumbs Up**  
+☝️ **Pointing**
 
 ---
 
-# 🎥 Real-Time Demo
+## 🎥 Real-Time Recognition
 
-The application processes webcam input in real time and displays:
+The system provides a live webcam interface with:
 
-- Hand landmarks
+- Hand landmark visualization
 - Gesture prediction
 - Prediction confidence
 - Pipeline FPS
 - Classifier inference time
 - Recent gesture history
 
-### Recommended Model
+The recommended model uses engineered geometric features.
 
-```bash
-python live_demo_ui.py --model engineered
-````
+Run `python live_demo_ui.py --model engineered`.
 
-Press **Q** to exit.
+The raw-landmark model can be tested using `python live_demo_ui.py --model raw`.
 
-### Raw Landmark Model
-
-```bash
-python live_demo_ui.py --model raw
-```
+Press **Q** to exit the application.
 
 ---
 
-# 🧠 How the System Works
+## 🧠 System Pipeline
 
-```text
-                         Webcam
-                            │
-                            ▼
-                   ┌─────────────────┐
-                   │   OpenCV Camera │
-                   └────────┬────────┘
-                            │
-                            ▼
-                   ┌─────────────────┐
-                   │ MediaPipe Hands │
-                   │   21 Landmarks  │
-                   └────────┬────────┘
-                            │
-                     Feature Extraction
-                            │
-                 ┌──────────┴──────────┐
-                 │                     │
-                 ▼                     ▼
-          Raw Landmarks       Engineered Features
-             63 features           20 features
-                 │                     │
-                 └──────────┬──────────┘
-                            ▼
-                   ┌─────────────────┐
-                   │ Random Forest   │
-                   │   Classifier    │
-                   └────────┬────────┘
-                            │
-                            ▼
-                   Gesture + Confidence
-```
+**Webcam → OpenCV → MediaPipe Hands → 21 Landmarks → Feature Extraction → Random Forest → Gesture Prediction**
+
+The system contains two feature-processing approaches:
+
+**Raw Landmark Representation**  
+21 landmarks × 3 coordinates = **63 features**
+
+**Engineered Geometric Representation**  
+20 normalized distance-based features describing hand shape.
 
 ---
 
-# 📐 Feature Engineering
+## 📐 Feature Engineering
 
-Two different feature representations were evaluated.
+### Raw Landmark Features
 
-## 1. Raw Landmark Features
-
-MediaPipe Hands provides **21 landmarks** for a detected hand.
-
-Each landmark contains:
-
-```text
-x
-y
-z
-```
-
-Therefore:
-
-```text
-21 × 3 = 63 features
-```
+MediaPipe provides 21 landmarks, with each landmark containing X, Y, and Z coordinates.
 
 The landmarks are:
 
-1. Translated relative to the wrist
-2. Normalized using the wrist-to-middle-MCP distance
-3. Flattened into a 63-dimensional feature vector
+- Centered relative to the wrist
+- Normalized using the wrist-to-middle-MCP distance
+- Flattened into a 63-dimensional feature vector
 
-This reduces sensitivity to the position and scale of the hand.
+This reduces sensitivity to hand position and scale.
 
----
+### Engineered Features
 
-## 2. Engineered Geometric Features
+The engineered representation contains **20 geometric features**:
 
-The second representation describes the **shape of the hand** using geometric distances.
-
-It contains **20 features**:
-
-```text
-5  fingertip → wrist distances
-5  fingertip → MCP distances
-10 pairwise fingertip distances
-```
+- 5 fingertip-to-wrist distances
+- 5 fingertip-to-MCP distances
+- 10 pairwise fingertip distances
 
 All distances are normalized using the wrist-to-middle-MCP distance.
 
-This representation focuses on **hand geometry rather than absolute landmark coordinates**.
+This focuses the model on **hand shape and finger relationships** rather than absolute coordinates.
 
 ---
 
-# 📊 Dataset
+## 📊 Dataset
 
-Three independently recorded sessions were collected:
+Three independently recorded sessions were used:
 
-```text
-Session A
-Session B
-Session C
-```
+**Session A • Session B • Session C**
 
-### Final Dataset
+The final dataset contains **3,986 samples** covering all five gesture classes.
 
-**3,986 samples**
+Session B was kept completely unseen during the final separate-session evaluation.
 
-The dataset contains samples from all five gesture classes.
+### Final Evaluation Setup
 
-Session B was deliberately kept as an **unseen independent session** for the final separate-session evaluation.
+**Same-session:**  
+Session A → 80% training / 20% testing
 
-This allows the project to test whether the model generalizes to a new recording session rather than only performing well on data recorded under the same conditions as the training data.
+**Separate-session:**  
+Training → Session A + Session C  
+Testing → Session B
 
----
-
-# 🧪 Evaluation Method
-
-Two evaluation scenarios were used.
-
-## Same-Session Evaluation
-
-Session A was divided into:
-
-```text
-80% Training
-20% Testing
-```
-
-using a stratified split.
-
-A fixed random seed of **42** was used for reproducibility.
+This separate-session setup evaluates how well the model generalizes to independently recorded data.
 
 ---
 
-## Separate-Session Evaluation
+## 🏆 Final Results
 
-For the stronger generalization test:
-
-```text
-Training → Session A + Session C
-Testing  → Session B
-```
-
-Session B was completely unseen during training.
-
-This provides a more realistic measure of how the model performs when the recording conditions change.
-
----
-
-# 🏆 Final Results
-
-| Feature Representation  | Same-Session Accuracy | Separate-Session Accuracy |
-| ----------------------- | --------------------: | ------------------------: |
-| **Raw Landmarks**       |            **99.29%** |                **86.27%** |
-| **Engineered Features** |            **97.16%** |                **94.84%** |
+| Feature Representation | Same-Session Accuracy | Separate-Session Accuracy |
+|---|---:|---:|
+| **Raw Landmarks** | **99.29%** | **86.27%** |
+| **Engineered Features** | **97.16%** | **94.84%** |
 
 ### Results Analysis
 
-The raw landmark model achieved the highest same-session accuracy:
+The raw landmark representation achieved the highest same-session accuracy at **99.29%**.
 
-**99.29%**
+However, its accuracy decreased to **86.27%** on the unseen session.
 
-However, its performance decreased to:
+The engineered feature representation achieved **97.16%** same-session accuracy and **94.84%** separate-session accuracy.
 
-**86.27%**
-
-on the completely unseen session.
-
-The engineered feature model achieved:
-
-**97.16%**
-
-same-session accuracy and:
-
-**94.84%**
-
-separate-session accuracy.
-
-This shows that the engineered geometric representation generalizes better across independently recorded sessions.
+This demonstrates that engineered geometric features provide substantially better **cross-session generalization**.
 
 ### 📈 Generalization Improvement
 
-Compared with raw landmarks, engineered features improved separate-session accuracy by:
-
 **94.84% − 86.27% = 8.57 percentage points**
 
-This indicates substantially stronger cross-session robustness.
+The engineered representation therefore provides a significant improvement when the model encounters data from a different recording session.
 
 ---
 
-# ⚡ Inference Performance
+## ⚡ Inference Performance
 
 | Feature Representation | Average Classifier Time |
-| ---------------------- | ----------------------: |
-| Raw Landmarks          |            **21.35 ms** |
-| Engineered Features    |            **19.57 ms** |
+|---|---:|
+| Raw Landmarks | **21.35 ms** |
+| Engineered Features | **19.57 ms** |
 
-The engineered representation also required less average classifier inference time.
-
----
-
-# 🛠️ Technologies Used
-
-* **Python 3.11**
-* **OpenCV** — webcam capture and visualization
-* **MediaPipe Hands** — 21-point hand landmark detection
-* **NumPy** — numerical feature processing
-* **Pandas** — dataset handling
-* **Scikit-learn** — Random Forest classification
-* **Joblib** — model serialization
+The engineered representation also provides lower average classifier inference time.
 
 ---
 
-# 📁 Project Structure
+## 🛠️ Technologies Used
+
+**Python 3.11** — Development language
+
+**OpenCV** — Webcam capture and real-time visualization
+
+**MediaPipe Hands** — 21-point hand landmark detection
+
+**NumPy** — Numerical processing and feature extraction
+
+**Pandas** — Dataset handling
+
+**Scikit-learn** — Random Forest classification
+
+**Joblib** — Saving and loading trained models
+
+---
+
+## 📁 Project Structure
 
 ```text
 HandGesture/
-│
 ├── data/
 │   ├── session_a.csv
 │   ├── session_b.csv
@@ -302,195 +196,82 @@ HandGesture/
 ├── features.py
 ├── final_evaluation.py
 ├── train_and_evaluate.py
-│
 ├── gesture_recognition.py
 ├── hand_tracking.py
 ├── test_camera.py
-│
 ├── live_demo.py
 ├── live_demo_ui.py
-│
 ├── model_raw.joblib
 ├── model_engineered.joblib
-│
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-```
+⚙️ Installation
 
----
+Clone the repository using git clone https://github.com/TSsanjayy/HandGesture.git and enter the project directory with cd HandGesture.
 
-# ⚙️ Installation
+Create a virtual environment using python -m venv gesture-env.
 
-## 1. Clone the Repository
+On Windows, activate it with gesture-env\Scripts\activate.
 
-```bash
-git clone https://github.com/TSsanjayy/HandGesture.git
-cd HandGesture
-```
+Install the required dependencies using pip install -r requirements.txt.
 
-## 2. Create a Virtual Environment
+▶️ Running the Project
+Data Collection
 
-```bash
-python -m venv gesture-env
-```
+Collect a session using python data_collection.py --session a.
 
-## 3. Activate the Environment on Windows
+The same script can be used with sessions b and c.
 
-```bash
-gesture-env\Scripts\activate
-```
+Feature Extraction
 
-## 4. Install Dependencies
+Run python features.py to generate the raw and engineered feature files.
 
-```bash
-pip install -r requirements.txt
-```
+Model Evaluation
 
----
+Run python final_evaluation.py to perform the final same-session and separate-session evaluation and measure classifier inference time.
 
-# ▶️ Running the Project
+Live Recognition
 
-## Collect Data
+Run python live_demo_ui.py --model engineered for the recommended real-time system.
 
-To collect a session:
+Use python live_demo_ui.py --model raw to test the raw landmark model.
 
-```bash
-python data_collection.py --session a
-```
+🔬 Reproducibility
 
-Use `b` or `c` to record another session.
+The project uses pinned dependency versions in requirements.txt.
 
-Example:
+Machine learning experiments use Random State = 42.
 
-```bash
-python data_collection.py --session c
-```
+The same landmark normalization and engineered-feature procedures are used for offline evaluation and real-time prediction.
 
----
+📦 Requirements
 
-## Generate Features
+The project uses:
 
-Run:
-
-```bash
-python features.py
-```
-
-This generates:
-
-```text
-features/raw_features.npz
-features/engineered_features.npz
-```
-
----
-
-## Train and Evaluate
-
-Run:
-
-```bash
-python final_evaluation.py
-```
-
-This evaluates:
-
-* Same-session accuracy
-* Separate-session accuracy
-* Classifier inference time
-
-It also saves:
-
-```text
-model_raw.joblib
-model_engineered.joblib
-```
-
----
-
-## Run the Live Recognition System
-
-Recommended:
-
-```bash
-python live_demo_ui.py --model engineered
-```
-
-Alternative:
-
-```bash
-python live_demo_ui.py --model raw
-```
-
-Press:
-
-```text
-Q
-```
-
-to close the application.
-
----
-
-# 🔬 Reproducibility
-
-The project uses pinned dependency versions through `requirements.txt`.
-
-Machine learning experiments use:
-
-```text
-Random State = 42
-```
-
-The same feature extraction and normalization procedures are used during offline evaluation and live recognition.
-
----
-
-# 📦 Requirements
-
-```text
 mediapipe==0.10.21
 numpy==1.26.4
 opencv-python==4.11.0.86
 scikit-learn==1.9.0
 pandas==3.0.5
 joblib==1.6.0
-```
+🎯 Project Objective
 
----
+The objective of this project is to develop a real-time and robust hand gesture recognition system while investigating whether geometric feature engineering can improve generalization across independently recorded sessions.
 
-# 🎯 Project Objective
+The experimental results demonstrate an important trade-off:
 
-The objective of this project is to develop a **real-time and robust hand gesture recognition system** and investigate whether engineered geometric features can improve generalization across independently recorded sessions.
+Raw landmarks provide extremely high accuracy on familiar data.
 
-The experimental results show an important trade-off:
+Engineered geometric features provide substantially better performance on unseen recording sessions while also providing faster classifier inference.
 
-* Raw landmarks provide extremely high accuracy on familiar data.
-* Engineered geometric features provide substantially better generalization to unseen recording sessions.
-* Engineered features also provide slightly faster classifier inference.
+Based on these results, the engineered feature model is used for the final real-time recognition system.
 
-The final real-time system therefore uses the **engineered feature representation**.
+👨‍💻 Author
+Sanjay TS
 
----
+GitHub: TSsanjayy
 
-# 👨‍💻 Author
+⭐ Project Summary
 
-## Sanjay TS
-
-GitHub:
-
-[https://github.com/TSsanjayy](https://github.com/TSsanjayy)
-
----
-
-## ⭐ Project Summary
-
-**5 gestures • 21 landmarks • 2 feature representations • Random Forest • 3,986 samples • 94.84% unseen-session accuracy • Real-time webcam recognition**
-
-```
-
-After pasting, press **Ctrl + S**.
-
-Then tell me **saved**.
-```
+5 Gestures • 21 Landmarks • 2 Feature Representations • Random Forest • 3,986 Samples • 94.84% Unseen-Session Accuracy • Real-Time Webcam Recognition
