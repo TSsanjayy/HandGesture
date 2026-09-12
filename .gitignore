@@ -1,0 +1,6 @@
+gesture-env/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+session_c_backup.csv
