@@ -149,14 +149,21 @@ The engineered representation therefore provides a significant improvement when 
 
 ## ⚡ Inference Performance
 
+### Offline Evaluation
+
 | Feature Representation | Average Classifier Time |
 |---|---:|
 | Raw Landmarks | **21.35 ms** |
 | Engineered Features | **19.57 ms** |
 
-The engineered representation also provides lower average classifier inference time.
+### Live Demo Performance
 
----
+| Metric | Result |
+|---|---:|
+| **Pipeline FPS** | **40.12 FPS** |
+| **Average Classifier Time** | **20.00 ms** |
+
+The engineered representation provides fast classifier inference, while the complete live pipeline runs at approximately **40 FPS**, enabling smooth real-time gesture recognition.
 
 ## 🛠️ Technologies Used
 
@@ -299,14 +306,6 @@ The experimental results demonstrate an important trade-off:
 **Engineered geometric features** provide substantially better performance on unseen recording sessions while also providing faster classifier inference.
 
 Based on these results, the **engineered feature model** is used for the final real-time recognition system.
-
----
-
-## 👨‍💻 Author
-
-### Sanjay TS
-
-GitHub: [TSsanjayy](https://github.com/TSsanjayy/HandGesture)
 
 ---
 
