@@ -50,7 +50,7 @@ The system provides a live webcam interface with:
 - Classifier inference time
 - Recent gesture history
 
-The recommended model uses engineered geometric features.
+### Recommended Model
 
 Run `python live_demo_ui.py --model engineered`.
 
@@ -66,11 +66,9 @@ Press **Q** to exit the application.
 
 The system contains two feature-processing approaches:
 
-**Raw Landmark Representation**  
-21 landmarks × 3 coordinates = **63 features**
+**Raw Landmark Representation:** 21 landmarks × 3 coordinates = **63 features**
 
-**Engineered Geometric Representation**  
-20 normalized distance-based features describing hand shape.
+**Engineered Geometric Representation:** 20 normalized distance-based features describing hand shape.
 
 ---
 
@@ -79,6 +77,8 @@ The system contains two feature-processing approaches:
 ### Raw Landmark Features
 
 MediaPipe provides 21 landmarks, with each landmark containing X, Y, and Z coordinates.
+
+Therefore, the raw representation contains **63 features**.
 
 The landmarks are:
 
@@ -114,12 +114,9 @@ Session B was kept completely unseen during the final separate-session evaluatio
 
 ### Final Evaluation Setup
 
-**Same-session:**  
-Session A → 80% training / 20% testing
+**Same-session:** Session A → 80% training / 20% testing
 
-**Separate-session:**  
-Training → Session A + Session C  
-Testing → Session B
+**Separate-session:** Training → Session A + Session C, Testing → Session B
 
 This separate-session setup evaluates how well the model generalizes to independently recorded data.
 
@@ -134,11 +131,11 @@ This separate-session setup evaluates how well the model generalizes to independ
 
 ### Results Analysis
 
-The raw landmark representation achieved the highest same-session accuracy at **99.29%**.
+The raw landmark model achieved the highest same-session accuracy at **99.29%**.
 
 However, its accuracy decreased to **86.27%** on the unseen session.
 
-The engineered feature representation achieved **97.16%** same-session accuracy and **94.84%** separate-session accuracy.
+The engineered feature model achieved **97.16%** same-session accuracy and **94.84%** separate-session accuracy.
 
 This demonstrates that engineered geometric features provide substantially better **cross-session generalization**.
 
@@ -181,97 +178,138 @@ The engineered representation also provides lower average classifier inference t
 
 ## 📁 Project Structure
 
-```text
-HandGesture/
-├── data/
-│   ├── session_a.csv
-│   ├── session_b.csv
-│   └── session_c.csv
-│
-├── features/
-│   ├── raw_features.npz
-│   └── engineered_features.npz
-│
-├── data_collection.py
-├── features.py
-├── final_evaluation.py
-├── train_and_evaluate.py
-├── gesture_recognition.py
-├── hand_tracking.py
-├── test_camera.py
-├── live_demo.py
-├── live_demo_ui.py
-├── model_raw.joblib
-├── model_engineered.joblib
-├── requirements.txt
-├── .gitignore
-└── README.md
-⚙️ Installation
+    HandGesture/
+    ├── data/
+    │   ├── session_a.csv
+    │   ├── session_b.csv
+    │   └── session_c.csv
+    │
+    ├── features/
+    │   ├── raw_features.npz
+    │   └── engineered_features.npz
+    │
+    ├── data_collection.py
+    ├── features.py
+    ├── final_evaluation.py
+    ├── train_and_evaluate.py
+    ├── gesture_recognition.py
+    ├── hand_tracking.py
+    ├── test_camera.py
+    ├── live_demo.py
+    ├── live_demo_ui.py
+    ├── model_raw.joblib
+    ├── model_engineered.joblib
+    ├── requirements.txt
+    ├── .gitignore
+    └── README.md
 
-Clone the repository using git clone https://github.com/TSsanjayy/HandGesture.git and enter the project directory with cd HandGesture.
+---
 
-Create a virtual environment using python -m venv gesture-env.
+## ⚙️ Installation
 
-On Windows, activate it with gesture-env\Scripts\activate.
+Clone the repository using:
 
-Install the required dependencies using pip install -r requirements.txt.
+`git clone https://github.com/TSsanjayy/HandGesture.git`
 
-▶️ Running the Project
-Data Collection
+Enter the project directory:
 
-Collect a session using python data_collection.py --session a.
+`cd HandGesture`
 
-The same script can be used with sessions b and c.
+Create a virtual environment:
 
-Feature Extraction
+`python -m venv gesture-env`
 
-Run python features.py to generate the raw and engineered feature files.
+Activate it on Windows:
 
-Model Evaluation
+`gesture-env\Scripts\activate`
 
-Run python final_evaluation.py to perform the final same-session and separate-session evaluation and measure classifier inference time.
+Install the dependencies:
 
-Live Recognition
+`pip install -r requirements.txt`
 
-Run python live_demo_ui.py --model engineered for the recommended real-time system.
+---
 
-Use python live_demo_ui.py --model raw to test the raw landmark model.
+## ▶️ Running the Project
 
-🔬 Reproducibility
+### Data Collection
 
-The project uses pinned dependency versions in requirements.txt.
+Collect a session using:
 
-Machine learning experiments use Random State = 42.
+`python data_collection.py --session a`
 
-The same landmark normalization and engineered-feature procedures are used for offline evaluation and real-time prediction.
+The same script can be used with sessions `b` and `c`.
 
-📦 Requirements
+### Feature Extraction
 
-The project uses:
+Run:
 
-mediapipe==0.10.21
-numpy==1.26.4
-opencv-python==4.11.0.86
-scikit-learn==1.9.0
-pandas==3.0.5
-joblib==1.6.0
-🎯 Project Objective
+`python features.py`
 
-The objective of this project is to develop a real-time and robust hand gesture recognition system while investigating whether geometric feature engineering can improve generalization across independently recorded sessions.
+This generates the raw and engineered feature files.
+
+### Model Evaluation
+
+Run:
+
+`python final_evaluation.py`
+
+This performs the final same-session and separate-session evaluation and measures classifier inference time.
+
+### Live Recognition
+
+Run:
+
+`python live_demo_ui.py --model engineered`
+
+To test the raw landmark model:
+
+`python live_demo_ui.py --model raw`
+
+---
+
+## 🔬 Reproducibility
+
+The project uses pinned dependency versions in `requirements.txt`.
+
+Machine learning experiments use **Random State = 42**.
+
+The same feature extraction and normalization procedures are used during offline evaluation and live recognition.
+
+---
+
+## 📦 Requirements
+
+- `mediapipe==0.10.21`
+- `numpy==1.26.4`
+- `opencv-python==4.11.0.86`
+- `scikit-learn==1.9.0`
+- `pandas==3.0.5`
+- `joblib==1.6.0`
+
+---
+
+## 🎯 Project Objective
+
+The objective of this project is to develop a **real-time and robust hand gesture recognition system** while investigating whether geometric feature engineering can improve generalization across independently recorded sessions.
 
 The experimental results demonstrate an important trade-off:
 
-Raw landmarks provide extremely high accuracy on familiar data.
+**Raw landmarks** provide extremely high accuracy on familiar data.
 
-Engineered geometric features provide substantially better performance on unseen recording sessions while also providing faster classifier inference.
+**Engineered geometric features** provide substantially better performance on unseen recording sessions while also providing faster classifier inference.
 
-Based on these results, the engineered feature model is used for the final real-time recognition system.
+Based on these results, the **engineered feature model** is used for the final real-time recognition system.
 
-👨‍💻 Author
-Sanjay TS
+---
 
-GitHub: TSsanjayy
+## 👨‍💻 Author
 
-⭐ Project Summary
+### Sanjay TS
 
-5 Gestures • 21 Landmarks • 2 Feature Representations • Random Forest • 3,986 Samples • 94.84% Unseen-Session Accuracy • Real-Time Webcam Recognition
+GitHub: [TSsanjayy](https://github.com/TSsanjayy/HandGesture)
+
+---
+
+## ⭐ Project Summary
+
+**5 Gestures • 21 Landmarks • 2 Feature Representations • Random Forest • 3,986 Samples • 94.84% Unseen-Session Accuracy • Real-Time Webcam Recognition**
